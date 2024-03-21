@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from 'react';
+import MainComponent from './Components/MainComponent';
+import CarDeadlineReminder from './Components/CarDeadlineReminder';
+import DriverDeadlineReminder from './Components/DriverDeadlineReminder';
 
 function App() {
+  const [carData, setCarData] = useState([]);
+  const [driverData, setDriverData] = useState([]);
+
+  const addCarData = (newCarData) => {
+    setCarData([...carData, newCarData]);
+  };
+
+  const addDriverData = (newDriverData) => {
+    setDriverData([...driverData, newDriverData]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <MainComponent 
+        addCarData={addCarData} 
+        carData={carData} 
+        addDriverData={addDriverData} 
+        driverData={driverData} 
+        setDriverData={setDriverData} 
+        setCarData={setCarData} 
+      />
     </div>
   );
 }
