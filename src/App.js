@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import MainComponent from './Components/MainComponent';
 import CarDeadlineReminder from './Components/CarDeadlineReminder';

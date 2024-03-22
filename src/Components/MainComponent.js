@@ -1,5 +1,5 @@
-// MainComponent.js
 import React, { useState } from 'react';
+import Accordion from 'react-bootstrap/Accordion';
 import CarDeadlineReminder from './CarDeadlineReminder';
 import DriverDeadlineReminder from './DriverDeadlineReminder';
 
@@ -8,26 +8,34 @@ const MainComponent = ({ addCarData, carData, addDriverData, driverData, setDriv
   const [showDriverComponent, setShowDriverComponent] = useState(false);
 
   const handleCarClick = () => {
-    setShowCarComponent(true);
-    setShowDriverComponent(false);
+    if (showCarComponent) {
+      setShowCarComponent(false);
+    } else {
+      setShowCarComponent(true);
+      setShowDriverComponent(false);
+    }
   };
 
   const handleDriverClick = () => {
-    setShowCarComponent(false);
-    setShowDriverComponent(true);
+    if (showDriverComponent) {
+      setShowDriverComponent(false);
+    } else {
+      setShowCarComponent(false);
+      setShowDriverComponent(true);
+    }
   };
 
   return (
-    <div className="main-container">
-      <div className="half-container" onClick={handleCarClick}>
-        <h2>Samochody</h2>
-      </div>
-      <div className="half-container" onClick={handleDriverClick}>
-        <h2>Kierowcy</h2>
-      </div>
+    <Accordion defaultActiveKey="0">
+     <Accordion.Item eventKey="0">
+      <Accordion.Header onClick={handleCarClick}>Samochody</Accordion.Header>
       {showCarComponent && <CarDeadlineReminder addCarData={addCarData} carData={carData} setCarData={setCarData} />}
+      </Accordion.Item>
+      <Accordion.Item eventKey="1">
+      <Accordion.Header onClick={handleDriverClick}>Kierowcy</Accordion.Header>
       {showDriverComponent && <DriverDeadlineReminder addDriverData={addDriverData} driverData={driverData} setDriverData={setDriverData} />}
-    </div>
+    </Accordion.Item>
+    </Accordion>
   );
 };
 
