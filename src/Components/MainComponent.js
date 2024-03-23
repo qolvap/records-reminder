@@ -26,7 +26,7 @@ const MainComponent = ({ addCarData, carData, addDriverData, driverData, setDriv
   };
 
   return (
-    <Accordion defaultActiveKey="0">
+    <Accordion defaultActiveKey="0" className="m-5">
      <Accordion.Item eventKey="0">
       <Accordion.Header onClick={handleCarClick}>Samochody</Accordion.Header>
       {showCarComponent && <CarDeadlineReminder addCarData={addCarData} carData={carData} setCarData={setCarData} />}
