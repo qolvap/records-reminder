@@ -30,11 +30,12 @@ const DriverDeadlineReminder = ({ addDriverData, driverData, setDriverData }) =>
         setShowAlert(false);
         setAlertVariant(null);
         setAlertMessage('');
-      }, 15000); // 15 seconds
+      }, 15000); 
     }
 
     return () => clearTimeout(timeout);
   }, [alertVariant, alertMessage]);
+
 
   const calculateDeadline = () => {
     if (!driverFirstName || !driverSecondName || !cardDate) {

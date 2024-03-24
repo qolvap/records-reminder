@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MainComponent from './Components/MainComponent';
 import CarDeadlineReminder from './Components/CarDeadlineReminder';
 import DriverDeadlineReminder from './Components/DriverDeadlineReminder';
+import Footer from './Components/Footer';
 
 function App() {
   const [carData, setCarData] = useState([]);
@@ -25,6 +26,7 @@ function App() {
         setDriverData={setDriverData} 
         setCarData={setCarData} 
       />
+      <Footer />
     </div>
   );
 }
