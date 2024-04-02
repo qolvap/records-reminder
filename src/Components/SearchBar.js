@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import BootstrapNavbar from 'react-bootstrap/Navbar';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
-
+import InputGroup from 'react-bootstrap/InputGroup';
 import { Search } from 'react-bootstrap-icons'; 
 
 const SearchBar = ({ searchData, setSearchData, filteredCars, filteredDrivers }) => {
@@ -52,22 +51,18 @@ const SearchBar = ({ searchData, setSearchData, filteredCars, filteredDrivers })
 
     return (
         <div className="m-5">
-            <BootstrapNavbar expand="lg" className="bg-body-tertiary">
-                <BootstrapNavbar.Toggle aria-controls="navbarScroll" />
-                <BootstrapNavbar.Collapse id="navbarScroll">
-                    <Form className="d-flex">
+
+                <InputGroup className="mb-3">
                         <Form.Control
                             type="search"
                             placeholder="Wpisz hasło"
-                            className="me-2"
                             aria-label="Search"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                         />
-                        <Button variant="outline-success" className="mt-2" onClick={handleSearch}> <Search /></Button>
-                    </Form>
-                </BootstrapNavbar.Collapse>
-            </BootstrapNavbar>
+                        <Button variant="outline-success" className="ml-2" onClick={handleSearch}> <Search /></Button>
+                    </InputGroup>
+
             {showResults && (
                 <Button variant="outline-primary" className="mt-2" onClick={handleHideResults}>Schowaj wyniki</Button>
             )}
