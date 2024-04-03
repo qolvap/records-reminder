@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import { addCarToDB as addCarToDBFirebase } from './FireBase';
+
 import Alert from 'react-bootstrap/Alert';
 import Badge from 'react-bootstrap/Badge';
 import ProgressBar from 'react-bootstrap/ProgressBar';
@@ -42,27 +44,29 @@ const CarDeadlineReminder = ({ addCarData, carData, setCarData }) => {
       setShowAlert(true);
       return;
     }
-
+  
     const inputDate = new Date(carDate);
     const deadlineDate = new Date(inputDate.getTime());
     deadlineDate.setDate(deadlineDate.getDate() + 90);
-
+    
     const newCarData = {
       id: carData.length + 1,
       carName,
       carDate: inputDate,
       deadlineDate
     };
-
+  
     addCarData(newCarData);
-
+  
     setCarName('');
     setCarDate('');
-
+  
     setAlertVariant('info');
     setAlertMessage(`Następny termin sczytania samochodu ${carName} to: ${deadlineDate.toLocaleDateString()}`);
     setShowAlert(true);
+    addCarToDBFirebase(carName, inputDate, deadlineDate);     
   };
+  
 
   const editCarData = (id) => {
     setEditingId(id);

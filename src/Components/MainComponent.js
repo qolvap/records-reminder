@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+
+import { addCarToDB } from './FireBase';
+import { addDriverToDB } from './FireBase';
+
 import Accordion from 'react-bootstrap/Accordion';
 import CarDeadlineReminder from './CarDeadlineReminder';
 import DriverDeadlineReminder from './DriverDeadlineReminder';
@@ -39,11 +43,11 @@ const MainComponent = ({ addCarData, carData, addDriverData, driverData, setDriv
       <Accordion defaultActiveKey="0" className="m-5">
         <Accordion.Item eventKey="0">
           <Accordion.Header onClick={handleCarClick}>Samochody</Accordion.Header>
-          {showCarComponent && <CarDeadlineReminder addCarData={addCarData} carData={carData} setCarData={setCarData} />}
+          {showCarComponent && <CarDeadlineReminder addCarToDB={addCarToDB} addCarData={addCarData} carData={carData} setCarData={setCarData} />}
         </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header onClick={handleDriverClick}>Kierowcy</Accordion.Header>
-          {showDriverComponent && <DriverDeadlineReminder addDriverData={addDriverData} driverData={driverData} setDriverData={setDriverData} />}
+          {showDriverComponent && <DriverDeadlineReminder addDriverToDB={addDriverToDB} addDriverData={addDriverData} driverData={driverData} setDriverData={setDriverData} />}
         </Accordion.Item>
       </Accordion>
       <SearchNavbar searchData={searchData} setSearchData={setSearchData} filteredCars={filteredCars} filteredDrivers={filteredDrivers} />

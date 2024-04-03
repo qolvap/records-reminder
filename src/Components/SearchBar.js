@@ -55,7 +55,7 @@ const SearchBar = ({ searchData, setSearchData, filteredCars, filteredDrivers })
                 <InputGroup className="mb-3">
                         <Form.Control
                             type="search"
-                            placeholder="Wpisz hasło"
+                            placeholder="Szybkie wyszukiwanie"
                             aria-label="Search"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}

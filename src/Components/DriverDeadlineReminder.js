@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import { addDriverToDB as addDriverToDBFirebase } from './FireBase';
+
 import Alert from 'react-bootstrap/Alert';
 import Badge from 'react-bootstrap/Badge';
 import ProgressBar from 'react-bootstrap/ProgressBar';
@@ -66,6 +68,7 @@ const DriverDeadlineReminder = ({ addDriverData, driverData, setDriverData }) =>
     setAlertVariant('info');
     setAlertMessage(`Następny termin sczytania karty ${driverFirstName} ${driverSecondName} to: ${deadlineDate.toLocaleDateString()}`);
     setShowAlert(true);
+    addDriverToDBFirebase(driverFirstName, driverSecondName, cardDate, deadlineDate);
   };
 
   const editDriverData = (id) => {
