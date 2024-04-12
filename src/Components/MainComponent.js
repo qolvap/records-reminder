@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-
-import { addCarToDB } from './FireBase';
-import { addDriverToDB } from './FireBase';
+import React, { useState, useEffect } from 'react';
+import { carsInDB, getDatabase, ref, onValue, off } from './FireBase';
 
 import Accordion from 'react-bootstrap/Accordion';
 import CarDeadlineReminder from './CarDeadlineReminder';
@@ -12,7 +10,19 @@ const MainComponent = ({ addCarData, carData, addDriverData, driverData, setDriv
   const [showCarComponent, setShowCarComponent] = useState(false);
   const [showDriverComponent, setShowDriverComponent] = useState(false);
   const [searchData, setSearchData] = useState('');
-  
+
+  useEffect(() => {
+    const checkUpdatesInData = onValue(carsInDB, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setCarData(Object.values(data));
+      }
+    });
+
+    return () => checkUpdatesInData();
+  }, [setCarData]);
+
+
   const handleCarClick = () => {
     if (showCarComponent) {
       setShowCarComponent(false);
@@ -32,22 +42,22 @@ const MainComponent = ({ addCarData, carData, addDriverData, driverData, setDriv
   };
 
   const filteredCars = carData.filter(car => car.carName.toLowerCase().includes(searchData.toLowerCase()));
-  
+
   const filteredDrivers = driverData.filter(driver => (
     driver.driverFirstName.toLowerCase().includes(searchData.toLowerCase()) ||
     driver.driverSecondName.toLowerCase().includes(searchData.toLowerCase())
   ));
 
   return (
-    <div>      
+    <div>
       <Accordion defaultActiveKey="0" className="m-5">
         <Accordion.Item eventKey="0">
           <Accordion.Header onClick={handleCarClick}>Samochody</Accordion.Header>
-          {showCarComponent && <CarDeadlineReminder addCarToDB={addCarToDB} addCarData={addCarData} carData={carData} setCarData={setCarData} />}
+          {showCarComponent && <CarDeadlineReminder addCarData={addCarData} carData={carData} setCarData={setCarData} />}
         </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header onClick={handleDriverClick}>Kierowcy</Accordion.Header>
-          {showDriverComponent && <DriverDeadlineReminder addDriverToDB={addDriverToDB} addDriverData={addDriverData} driverData={driverData} setDriverData={setDriverData} />}
+          {showDriverComponent && <DriverDeadlineReminder addDriverData={addDriverData} driverData={driverData} setDriverData={setDriverData} />}
         </Accordion.Item>
       </Accordion>
       <SearchNavbar searchData={searchData} setSearchData={setSearchData} filteredCars={filteredCars} filteredDrivers={filteredDrivers} />

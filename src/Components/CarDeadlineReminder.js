@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-import { addCarToDB as addCarToDBFirebase } from './FireBase';
+import { onValue, carsInDB, addCarToDB as addCarToDBFirebase } from './FireBase';
 
 import Alert from 'react-bootstrap/Alert';
 import Badge from 'react-bootstrap/Badge';
@@ -37,6 +36,22 @@ const CarDeadlineReminder = ({ addCarData, carData, setCarData }) => {
     return () => clearTimeout(timeout);
   }, [alertVariant, alertMessage]);
 
+  useEffect(() => {
+    const unsubscribe = onValue(carsInDB, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setCarData(Object.values(data));
+      } else {
+        setCarData([]);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [setCarData]);
+
+
   const calculateDeadline = () => {
     if (!carName || !carDate) {
       setAlertVariant('warning');
@@ -48,9 +63,9 @@ const CarDeadlineReminder = ({ addCarData, carData, setCarData }) => {
     const inputDate = new Date(carDate);
     const deadlineDate = new Date(inputDate.getTime());
     deadlineDate.setDate(deadlineDate.getDate() + 90);
-    
+  
     const newCarData = {
-      id: carData.length + 1,
+      id: Date.now(),
       carName,
       carDate: inputDate,
       deadlineDate
@@ -64,9 +79,8 @@ const CarDeadlineReminder = ({ addCarData, carData, setCarData }) => {
     setAlertVariant('info');
     setAlertMessage(`Następny termin sczytania samochodu ${carName} to: ${deadlineDate.toLocaleDateString()}`);
     setShowAlert(true);
-    addCarToDBFirebase(carName, inputDate, deadlineDate);     
-  };
-  
+    addCarToDBFirebase(newCarData);     
+  };  
 
   const editCarData = (id) => {
     setEditingId(id);
@@ -79,27 +93,31 @@ const CarDeadlineReminder = ({ addCarData, carData, setCarData }) => {
 
   const updateCarData = () => {
     const updatedCarData = carData.map(data => {
-      if (data.id === editingId) {
-        const inputDate = new Date(carDate);
-        const deadlineDate = new Date(inputDate.getTime());
-        deadlineDate.setDate(deadlineDate.getDate() + 90);
+        if (data.id === editingId) {
+            const inputDate = new Date(carDate);
+            const deadlineDate = new Date(inputDate.getTime());
+            deadlineDate.setDate(deadlineDate.getDate() + 90);
 
-        return {
-          ...data,
-          carName,
-          carDate: inputDate,
-          deadlineDate
-        };
-      }
-      return data;
+            const updatedData = {
+                ...data,
+                carName,
+                carDate: inputDate,
+                deadlineDate
+            };
+
+            addCarToDBFirebase(updatedData);
+
+            return updatedData;
+        }
+        return data;
     });
-    
+
     setCarData(updatedCarData);
-    
     setCarName('');
     setCarDate('');
     setEditingId(null);
-  };
+};
+
 
   const deleteCarData = (id) => {
     const updatedCarData = carData.filter(data => data.id !== id);
@@ -146,8 +164,8 @@ const CarDeadlineReminder = ({ addCarData, carData, setCarData }) => {
               <>
                 <Card body className="shadow p-3 mb-5 bg-white rounded">
                   <p>Numer rejestracyjny: {data.carName}</p>
-                  <p>Data ostatniego sczytania samochodu: <Badge bg="secondary">{data.carDate.toLocaleDateString()}</Badge></p>
-                  <p>Data kolejnego sczytania samochodu: <Badge bg="warning" text="dark">{data.deadlineDate.toLocaleDateString()}</Badge></p>
+                  <p>Data ostatniego sczytania samochodu: <Badge bg="secondary">{data.carDate && data.carDate.toLocaleDateString()}</Badge></p>
+                  <p>Data kolejnego sczytania samochodu: <Badge bg="warning" text="dark">{data.deadlineDate && data.deadlineDate.toLocaleDateString()}</Badge></p>
                   <p>Dni pozostało: {daysLeft}/{90}</p>
                   {daysLeft <= 0 && <p><Badge bg="danger" text="dark">Termin wygasł</Badge></p>}
                   {daysLeft > 0 && (
